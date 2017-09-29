@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">sTalk</string>
+    <string name="register_name">Register Member</string>
+    <string name="settings_name">Settings</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+</resources>

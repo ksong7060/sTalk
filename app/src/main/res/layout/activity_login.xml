@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ksong7060.stalk.LoginActivity">
+
+    <include
+        layout="@layout/toolbar_layout"
+        android:id="@+id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/main_logo"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lbl_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID"
+                android:textAllCaps="false"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingBottom="16dp"
+                android:paddingRight="65dp" />
+
+            <EditText
+                android:id="@+id/id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_toRightOf="@+id/lbl_id"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/lbl_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textAllCaps="false"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:paddingBottom="16dp"
+                android:paddingRight="16dp" />
+
+            <EditText
+                android:id="@+id/pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_toRightOf="@+id/lbl_pwd"/>
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="VIP Membership"
+            android:layout_marginLeft="12dp"/>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+
+</LinearLayout>
