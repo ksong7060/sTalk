@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ksong7060.stalk.MainActivity">
+    tools:context="com.ksong7060.stalk.MainActivity_LinearLayout">
 
     <include
         layout="@layout/toolbar_layout"
@@ -27,51 +27,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/lbl_id"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ID"
-                android:textAllCaps="false"
-                android:paddingTop="16dp"
-                android:paddingLeft="16dp"
-                android:paddingBottom="16dp"
-                android:paddingRight="65dp" />
+                android:src="@drawable/ic_person_black_24dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"/>
 
-            <TextView
-                android:id="@+id/lbl_pwd"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PASSWORD"
-                android:textAllCaps="false"
-                android:paddingTop="16dp"
-                android:paddingLeft="16dp"
-                android:paddingBottom="16dp"
-                android:paddingRight="16dp" />
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/lbl_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID"
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/lbl_member"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Membership"
+                    android:paddingLeft="16dp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/lbl_member"
+                android:id="@+id/lbl_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Membership"
-                android:textAllCaps="false"
-                android:paddingTop="16dp"
-                android:paddingLeft="16dp"
-                android:paddingBottom="16dp"
-                android:paddingRight="65dp" />
-
-            <TextView
-                android:id="@+id/lbl_gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GENDER"
-                android:textAllCaps="false"
-                android:paddingTop="16dp"
-                android:paddingLeft="16dp"
-                android:paddingBottom="16dp"
-                android:paddingRight="16dp" />
+                android:text="Date"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"/>
 
         </LinearLayout>
 

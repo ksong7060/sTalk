@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ksong7060.stalk.MainActivity">
+    tools:context="com.ksong7060.stalk.MainActivity_LinearLayout">
 
     <include
         layout="@layout/toolbar_layout"
