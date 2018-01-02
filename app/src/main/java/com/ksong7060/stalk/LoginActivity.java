@@ -6,13 +6,25 @@
 
 package com.ksong7060.stalk;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,11 +39,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button mBtnRegister;
     private Button mBtnLogin;
-    private EditText mId;
+    private EditText mUsername;
     private EditText mPassword;
 
     private Toolbar toolbar;
     private CheckBox mCheckBox;
+
+    private String loginUsername = "";
+    private String loginPwd = "";
+
+    DBManager manager = new DBManager(this);
+    SQLiteDatabase db;
+
+    double initTime;
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter("registrationComplete"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.STR_PUSH));
+    }
 
     /**
      *
@@ -46,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(linear);
 
-        mId = (EditText) findViewById(R.id.id);
+        mUsername = (EditText) findViewById(R.id.username);
         mPassword = (EditText) findViewById(R.id.pwd);
 
         mBtnLogin = (Button) findViewById(R.id.btn_login);
@@ -54,6 +92,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mBtnLogin.setOnClickListener(this);
         mBtnRegister.setOnClickListener(this);
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(Config.STR_PUSH)){
+                    String message = intent.getStringExtra("message");
+                    showNotification("sTalkFirebase", message);
+                }
+            }
+        };
 
         /**
          *
@@ -82,6 +130,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void showNotification(String title, String message) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0 , intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Set sound of notification
+        Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(getApplicationContext());
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSound(notificationSound)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1 , b.build());
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -90,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(i);
                 break;
             case R.id.btn_login:
-                CheckValues(mId.getText().toString(), mPassword.getText().toString());
+                CheckValues(mUsername.getText().toString(), mPassword.getText().toString());
                 break;
             default:
                 Intent j = new Intent(LoginActivity.this, SettingsActivity.class);
@@ -99,27 +169,56 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void CheckValues(String id, String pwd){
-        String loginId = mId.getText().toString();
-        String loginPwd = mPassword.getText().toString();
-        if(id.equals("")){
+    private void CheckValues(String username, String pwd){
+
+        if(username.equals("")){
             Toast.makeText(LoginActivity.this, "There is no ID", Toast.LENGTH_SHORT).show();
         } else if (pwd.equals("")){
             Toast.makeText(LoginActivity.this, "There is no Password", Toast.LENGTH_SHORT).show();
         } else {
-            // ===========CheckBox=============
-            String chkValue = "";
-            if(mCheckBox.isChecked()){
-                chkValue = "VIP Membership";
-            } else {
-                chkValue = "Not VIP Membership";
+            loginUsername = mUsername.getText().toString();
+            loginPwd = mPassword.getText().toString();
+
+            db = manager.getWritableDatabase();
+            Cursor cursor = db.rawQuery("select pid,username, password from tb_member", null);
+            String cMid = "";
+            String cUsername = "";
+            String cPassword = "";
+            int failLogin = 0;
+
+            int count = cursor.getCount();
+            for (int i = 0; i < count; i++) {
+                cursor.moveToNext();
+                cMid = cursor.getString(0);
+                cUsername = cursor.getString(1);
+                cPassword = cursor.getString(2);
+
+                if (loginUsername.equals(cUsername) && loginPwd.equals(cPassword)) {
+
+                    failLogin = 1;
+
+                    // ===========CheckBox=============
+                    String chkValue = "";
+                    if (mCheckBox.isChecked()) {
+                        chkValue = "VIP Membership";
+                    } else {
+                        chkValue = "Not VIP Membership";
+                    }
+
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("pid", cMid);
+                    intent.putExtra("username", loginUsername);
+                    intent.putExtra("u_member", chkValue);
+                    startActivity(intent);
+                }
             }
 
-            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-            i.putExtra("u_id", loginId);
-            i.putExtra("u_pwd", loginPwd);
-            i.putExtra("u_member", chkValue);
-            startActivity(i);
+            if (failLogin == 0) {
+                Toast.makeText(LoginActivity.this, "Input the correct information", Toast.LENGTH_SHORT).show();
+                mUsername.setText("");
+                mPassword.setText("");
+            }
+            cursor.close();
         }
     }
 
@@ -156,6 +255,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
         return false;
+    }
+
+    // back button을 3초 이내에 2번을 누르면 종료 앱 종료
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if(System.currentTimeMillis() - initTime > 2000){
+                Toast toast = Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT);
+                toast.show();
+            }else {
+                finish();
+            }
+            initTime = System.currentTimeMillis();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }
