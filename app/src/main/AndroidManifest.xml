@@ -3,6 +3,8 @@
     package="com.ksong7060.stalk">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -31,13 +33,75 @@
             android:name=".ScheduleActivity"
             android:label="Schedule" />
         <activity
+            android:name=".ProfileActivity"
+            android:label="Profile"
+            android:theme="@style/AppAnotherTheme" />
+        <activity
             android:name=".MenuActivity"
             android:label="Menu" />
         <activity
             android:name=".AboutActivity"
             android:label="About" />
-        <activity android:name=".ContactActivity"
+        <activity
+            android:name=".ContactActivity"
             android:label="Contact Us" />
+        <activity android:name=".RelativeLayoutMainActivity" />
+        <activity android:name=".TabMenuActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TableGridActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".VibratorActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CreateGroupActivity"
+            android:theme="@style/AppAnotherTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".DialogActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".RegisterBackupActivity" />
+        <activity
+            android:name=".ListGroupActivity"
+            android:label="@string/group_list" />
+        <activity
+            android:name=".ProfileDetailActivity"
+            android:label="@string/profile_detail" />
+        <activity android:name=".DetailGroupActivity" />
+        <activity android:name=".ListMemberActivity"></activity>
+        <service android:name=".sTalkFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name=".sTalkFirebase">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
