@@ -42,7 +42,7 @@ public class sTalkFirebaseMessagingService extends FirebaseMessagingService{
      * @param body
      */
     private void sendNotification(String body){
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /*Request Code*/, intent, PendingIntent.FLAG_ONE_SHOT);
